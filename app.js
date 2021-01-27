@@ -152,7 +152,7 @@ function searchForSolution(boards){
         // backtracking search for solution
         var first = boards.pop()
         const tryPath = solve(first)
-        if (tryPath != false){
+        if (tryPath){
             return tryPath
         }
         else{
@@ -170,10 +170,10 @@ function nextBoard(board){
     if (firstEmpty != undefined){
         const y = firstEmpty[0]
         const x = firstEmpty[1]
-        for (var i = 1; i <= 9; i++){
+        for (var i = 1; i < 10; i++){
             var newBoard = [...board]
             var row = [...newBoard[y]]
-            row[x] = randomNums()[i]
+            row[x] = i
             newBoard[y] = row
             res.push(newBoard)
         }
