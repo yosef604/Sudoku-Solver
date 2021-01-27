@@ -99,6 +99,33 @@ function convert (arr){
     return arr
 }
 
+
+function randomAnsware(){
+    let random = Math.floor(Math.random() * 2)
+    if (random === 0){
+        return false
+    } else {
+        return true
+    }
+}
+
+
+function randomBoard(board) {
+    let arr = []
+    for(let i = 0; i < 9; i++){
+        let array = []
+        for (let index = 0; index < 9; index++){
+            if (randomAnsware()){
+                array.push(board[i][index])
+            } else {
+                array.push(0)
+            }
+        }
+        arr.push(array)
+    }
+    return arr
+}
+
 function randomNums () {
     let count  = 1
     let array = []
@@ -111,8 +138,6 @@ function randomNums () {
     }
     return array
 }
-
-console.log(randomNums())
 
 function solve (board) {
     if (solved(board)) {
@@ -152,7 +177,7 @@ function searchForSolution(boards){
         // backtracking search for solution
         var first = boards.pop()
         const tryPath = solve(first)
-        if (tryPath){
+        if (tryPath != false){
             return tryPath
         }
         else{
@@ -170,16 +195,18 @@ function nextBoard(board){
     if (firstEmpty != undefined){
         const y = firstEmpty[0]
         const x = firstEmpty[1]
-        for (var i = 1; i < 10; i++){
+        for (var i = 0; i < 9; i++){
             var newBoard = [...board]
             var row = [...newBoard[y]]
-            row[x] = i
+            row[x] = randomNums()[i]
             newBoard[y] = row
             res.push(newBoard)
         }
     }
     return res
 }
+
+
 
 function findEmptySquare(board){
     // THIS FUNCTION WORKS.
@@ -279,3 +306,16 @@ function boxesGood(board){
     return true
 }
 
+let n = null
+
+let bd3 = [[n, n, n, n, n, n, n, n, n],
+           [n, n, n, n, n, n, n, n, n],
+           [n, n, n, n, n, n, n, n, n],
+           [n, n, n, n, n, n, n, n, n],
+           [n, n, n, n, n, n, n, n, n],
+           [n, n, n, n, n, n, n, n, n],
+           [n, n, n, n, n, n, n, n, n],
+           [n, n, n, n, n, n, n, n, n],
+           [n, n, n, n, n, n, n, n, n]]
+
+console.log(randomBoard(solve(bd3)))
