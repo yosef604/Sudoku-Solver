@@ -1,19 +1,21 @@
 let StoreText = ''
 
-function qs (qs){
-    return document.querySelector(qs)
-}
-
-function qsa (qsa){
-    return document.querySelectorAll(qsa)
-}
-
-function clearPrivious () {
-    for (let i = 1; i < 82; i++){
-        if (document.getElementById(i) !== null){
-            document.getElementById(i).remove()
-        }
+for(let i = 1; i < 82; i++){
+    let cell = document.createElement('p')
+    cell.innerText = ''
+    cell.classList.add('cell')
+    cell.id = i
+    if ((i > 18 && i < 28) || (i > 45 && i < 55)){
+        cell.classList.add('border-buttom')
     }
+    if (i % 9 === 3 || i % 9 === 6){
+        cell.classList.add('border-right')
+    }
+    cell.addEventListener('click', function(){
+        cell.innerText = StoreText
+    })
+    qs('.board').appendChild(cell)
+    
 }
 
 for (let i = 0; i < 10; i++){
@@ -28,22 +30,8 @@ for (let i = 0; i < 10; i++){
 
 qs('.btn-board').addEventListener('click', function(){
     clearPrivious()
-    for(let i = 1; i < 82; i++){
-        let cell = document.createElement('p')
-        cell.classList.add('cell')
-        cell.id = i
-        if ((i > 18 && i < 28) || (i > 45 && i < 55)){
-            cell.classList.add('border-buttom')
-        }
-        if (i % 9 === 3 || i % 9 === 6){
-            cell.classList.add('border-right')
-        }
-        cell.addEventListener('click', function(){
-            cell.innerText = StoreText
-        })
-        qs('.board').appendChild(cell)
-        
-    }
+    let board = randomBoard(solve(bd3))
+    insert(board)
 })
 
 
@@ -55,53 +43,41 @@ qs('.clear').addEventListener('click', function() {
 
 
 qs('.solve').addEventListener('click', function() {
-    let arr = []
-    let array = []
-    for(let i = 1; i < 82; i ++){
-        array.push(document.getElementById(i).innerText)
-        if ( i % 9 === 0){
-            arr.push(array)
-            array = []
-        }
-    }
-    let solvedArr = solve(convert(arr))
-    if (solvedArr === false || solvedArr === undefined){
-        let err = document.createElement('div')
-        err.classList.add('error')
-        err.innerHTML = '<h1>WRONG INPUT!!!</h1>'
-        qs('.main').appendChild(err)
+    if (!solve(inCells())) {
+        alert('BOARD IS INVALID!!!')
     } else {
-        insert(solvedArr)
-        console.log(solvedArr)
+        insert(solve(inCells()))
     }
 })
 
-function insert (board){
-    let id = 1
+function inCells () {
+    let arr = []
+    let idcount = 1
     for (let i = 0; i < 9; i++){
+        let array = []
         for (let index = 0; index < 9; index++){
-            document.getElementById(id).innerText = board[i][index]
-            id++
-        }
-    }
-}
-
-function convert (arr){
-    for(let i = 0; i < 9; i++){
-        for (let index = 0; index < 9; index++){
-            if (Number(arr[i][index])){
-                arr[i][index] = Number(arr[i][index])
+            if (Number(document.getElementById(idcount).innerText)){
+                array.push(Number(document.getElementById(idcount).innerText))
             } else {
-                arr[i][index] = null
+                array.push(null)
             }
+            idcount++
         }
+        arr.push(array)
     }
     return arr
 }
 
+function clearPrivious () {
+    for (let i = 1; i < 82; i++){
+        if (document.getElementById(i) !== null){
+            document.getElementById(i).innerText = ''
+        }
+    }
+}
 
 function randomAnsware(){
-    let random = Math.floor(Math.random() * 2)
+    let random = Math.floor(Math.random() * 9)
     if (random === 0){
         return false
     } else {
@@ -115,16 +91,28 @@ function randomBoard(board) {
     for(let i = 0; i < 9; i++){
         let array = []
         for (let index = 0; index < 9; index++){
-            if (randomAnsware()){
+            if (!randomAnsware()){
                 array.push(board[i][index])
             } else {
-                array.push(0)
+                array.push('')
             }
         }
         arr.push(array)
     }
     return arr
 }
+
+
+function insert (board){
+    let id = 1
+    for (let i = 0; i < 9; i++){
+        for (let index = 0; index < 9; index++){
+            document.getElementById(id).innerText = board[i][index]
+            id++
+        }
+    }
+}
+
 
 function randomNums () {
     let count  = 1
@@ -195,10 +183,11 @@ function nextBoard(board){
     if (firstEmpty != undefined){
         const y = firstEmpty[0]
         const x = firstEmpty[1]
+        const rand = randomNums()
         for (var i = 0; i < 9; i++){
             var newBoard = [...board]
             var row = [...newBoard[y]]
-            row[x] = randomNums()[i]
+            row[x] = rand[i]
             newBoard[y] = row
             res.push(newBoard)
         }
@@ -306,6 +295,14 @@ function boxesGood(board){
     return true
 }
 
+function qs (qs){
+    return document.querySelector(qs)
+}
+
+function qsa (qsa){
+    return document.querySelectorAll(qsa)
+}
+
 let n = null
 
 let bd3 = [[n, n, n, n, n, n, n, n, n],
@@ -318,4 +315,6 @@ let bd3 = [[n, n, n, n, n, n, n, n, n],
            [n, n, n, n, n, n, n, n, n],
            [n, n, n, n, n, n, n, n, n]]
 
-console.log(randomBoard(solve(bd3)))
+
+
+           
