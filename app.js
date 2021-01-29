@@ -77,7 +77,7 @@ function clearPrivious () {
 }
 
 function randomAnsware(){
-    let random = Math.floor(Math.random() * 2)
+    let random = Math.floor(Math.random() * 3)
     if (random === 0){
         return false
     } else {
